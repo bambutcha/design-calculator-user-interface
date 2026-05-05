@@ -1,7 +1,7 @@
 {
   "name": "novacalc",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "NovaCalc desktop calculator app",
   "author": {
     "name": "Bambutcha",
@@ -14,6 +14,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "desktop:dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && electron .\"",
     "desktop:build": "npm run build && electron-builder"
   },
@@ -38,6 +40,7 @@
     "typescript": "5.9.3",
     "vite": "7.3.2",
     "vite-plugin-singlefile": "2.3.0",
+    "vitest": "^3.2.4",
     "wait-on": "^8.0.5"
   },
   "build": {

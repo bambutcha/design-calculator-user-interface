@@ -46,12 +46,23 @@ export class CalculatorEngine {
   private tokenize(text: string): string[] {
     const tokens: string[] = [];
     let match;
+    let cursor = 0;
     this.tokenRe.lastIndex = 0;
     while ((match = this.tokenRe.exec(text)) !== null) {
+      if (match.index !== cursor) {
+        throw new CalculatorError(`Invalid token near: '${text.slice(cursor, match.index + 1)}'`);
+      }
       tokens.push(match[1]);
-      if (this.tokenRe.lastIndex === match.index) this.tokenRe.lastIndex++;
+      cursor = this.tokenRe.lastIndex;
     }
-    
+    if (cursor !== text.length) {
+      throw new CalculatorError(`Invalid token near: '${text.slice(cursor)}'`);
+    }
+
+    if (tokens.length === 0) {
+      throw new CalculatorError("Empty input");
+    }
+
     return tokens;
   }
 
@@ -141,7 +152,7 @@ export class CalculatorEngine {
       this.consume("(");
       value = this.parseExpr();
       this.consume(")");
-    } else if (/^\d+(?:\.\d+)?|\.\d+$/.test(token)) {
+    } else if (/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(token)) {
       this.consume();
       value = { value: parseFloat(token), isPercent: false };
     } else if (/^[A-Za-z_]\w*$/.test(token)) {

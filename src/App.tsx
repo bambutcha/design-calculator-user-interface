@@ -24,10 +24,11 @@ const engine = new CalculatorEngine();
 const App: React.FC = () => {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState<string | number>('0');
-  const [status, setStatus] = useState('Ready');
+  const [status, setStatus] = useState('Готово');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [lastGoodResult, setLastGoodResult] = useState<string | number>('0');
   
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +37,15 @@ const App: React.FC = () => {
     if (savedHistory) setHistory(JSON.parse(savedHistory));
     const savedTheme = localStorage.getItem('calc_theme') as 'light' | 'dark';
     if (savedTheme) setTheme(savedTheme || 'dark');
+    const savedExpression = localStorage.getItem('calc_expression');
+    const savedResult = localStorage.getItem('calc_result');
+    const savedStatus = localStorage.getItem('calc_status');
+    if (savedExpression) setExpression(savedExpression);
+    if (savedResult) {
+      setResult(savedResult);
+      setLastGoodResult(savedResult);
+    }
+    if (savedStatus) setStatus(savedStatus);
   }, []);
 
   useEffect(() => {
@@ -48,20 +58,34 @@ const App: React.FC = () => {
     else document.documentElement.classList.remove('dark');
   }, [theme]);
 
+  useEffect(() => {
+    localStorage.setItem('calc_expression', expression);
+  }, [expression]);
+
+  useEffect(() => {
+    localStorage.setItem('calc_result', String(result));
+  }, [result]);
+
+  useEffect(() => {
+    localStorage.setItem('calc_status', status);
+  }, [status]);
+
   const handleCalculate = () => {
     if (!expression.trim()) {
-      setStatus('Enter an expression');
+      setStatus('Введите выражение');
       return;
     }
     try {
       const res = engine.evaluate(expression);
       const rendered = Number.isInteger(res) ? res : parseFloat(res.toFixed(8));
       setResult(rendered);
-      setStatus('Calculated');
+      setLastGoodResult(rendered);
+      setStatus('Вычислено');
       setHistory(prev => [{ expression, result: rendered, timestamp: Date.now() }, ...prev].slice(0, 50));
     } catch (err: any) {
-      setResult('Error');
-      setStatus(err.message || 'Invalid expression');
+      // Keep app stable: preserve last valid result and show explicit error.
+      setResult(lastGoodResult);
+      setStatus(err.message ? `Ошибка: ${err.message}` : 'Ошибка: некорректное выражение');
     }
   };
 
@@ -79,13 +103,15 @@ const App: React.FC = () => {
   const clearAll = () => {
     setExpression('');
     setResult('0');
-    setStatus('Ready');
+    setLastGoodResult('0');
+    setStatus('Готово');
   };
 
   const reuseHistory = (item: HistoryItem) => {
     setExpression(item.expression);
     setResult(item.result);
-    setStatus('Restored');
+    setLastGoodResult(item.result);
+    setStatus('Восстановлено из истории');
   };
 
   const buttons = [
