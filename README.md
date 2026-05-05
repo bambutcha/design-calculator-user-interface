@@ -47,6 +47,7 @@ npm run desktop:build
   - Linux: `AppImage`
   - Windows: `NSIS` installer
 - Artifacts are uploaded in the workflow run.
+- The workflow also publishes binaries to **GitHub Releases** automatically.
 
 Tag example:
 
