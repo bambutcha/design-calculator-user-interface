@@ -2,6 +2,10 @@
 
 Minimal desktop calculator with a modern UI.
 
+[![Release Build](https://github.com/bambutcha/design-calculator-user-interface/actions/workflows/release.yml/badge.svg)](https://github.com/bambutcha/design-calculator-user-interface/actions/workflows/release.yml)
+![Version](https://img.shields.io/badge/version-0.1.0-7c7de6)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-1f2937)
+
 ## Stack
 
 - React + Vite + TypeScript
@@ -35,6 +39,20 @@ npm run desktop:dev
 ```bash
 npm run build
 npm run desktop:build
+```
+
+## CI Releases
+
+- On each `v*` tag push, GitHub Actions builds:
+  - Linux: `AppImage`
+  - Windows: `NSIS` installer
+- Artifacts are uploaded in the workflow run.
+
+Tag example:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
 Build artifacts:

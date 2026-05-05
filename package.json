@@ -1,13 +1,13 @@
 {
-  "name": "react-vite-tailwind",
+  "name": "novacalc",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "NovaCalc desktop calculator app",
   "author": {
     "name": "Bambutcha",
     "email": "bambutcha@example.com"
   },
-  "homepage": "https://example.com/novacalc",
+  "homepage": "https://github.com/bambutcha/design-calculator-user-interface",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
