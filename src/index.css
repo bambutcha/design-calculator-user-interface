@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Use class-based dark mode so theme toggle is deterministic in desktop app. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
